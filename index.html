@@ -1,0 +1,1557 @@
+<!DOCTYPE html>
+<html lang="pt-BR" translate="no" class="notranslate">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="google" content="notranslate">
+    <title>DJ Marcio David | Agenda Corporativa</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        corp: {
+                            primary: '#0F172A',   /* Slate 900 */
+                            secondary: '#475569', /* Slate 600 */
+                            muted: '#94A3B8',     /* Slate 400 */
+                            accent: '#2563EB',    /* Blue 600 */
+                            'accent-hover': '#1D4ED8',
+                            border: '#E2E8F0',    /* Slate 200 */
+                            light: '#F8FAFC',     /* Slate 50 */
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            background-image: linear-gradient(rgba(248, 250, 252, 0.96), rgba(248, 250, 252, 0.96)), url('https://i.ibb.co/Mk34CmcS/Gemini-Generated-Image-odv3xoodv3xoodv3-removebg-preview.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: #0F172A;
+        }
+
+        .corp-card {
+            background-color: #ffffff;
+            border: 1px solid #E2E8F0;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        /* Tema FullCalendar Padrão (Light) */
+        .fc { font-family: 'Inter', sans-serif; }
+        .fc-toolbar-title { font-size: 1.15rem !important; font-weight: 700 !important; color: #0F172A; }
+        .fc-button-primary { background-color: #ffffff !important; color: #475569 !important; border: 1px solid #E2E8F0 !important; font-weight: 500 !important; text-transform: capitalize !important; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important; transition: all 0.2s !important; }
+        .fc-button-primary:hover { background-color: #F8FAFC !important; color: #0F172A !important; }
+        .fc-button-active { background-color: #2563EB !important; border-color: #2563EB !important; color: white !important;}
+        .fc-col-header-cell-cushion { color: #475569; font-weight: 600; font-size: 0.825rem; padding: 10px 0 !important; }
+        .fc-daygrid-day-number { color: #475569; font-weight: 500; font-size: 0.825rem; padding: 6px !important; }
+        .fc-theme-standard td, .fc-theme-standard th { border-color: #E2E8F0; }
+        .fc-day-today { background-color: #EFF6FF !important; }
+        .fc-event { border: none !important; border-radius: 4px !important; padding: 2px 4px !important; font-size: 0.7rem !important; font-weight: 500 !important; cursor: pointer; transition: transform 0.1s; }
+        .fc-event:hover { transform: scale(1.02); }
+
+        /* Fix essencial para evitar duplicações por ferramentas de tradução */
+        .fc .fc-sr-only { display: none !important; }
+
+        /* Barra de rolagem personalizada */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94A3B8; }
+
+        /* --- THEME DARK BLACK --- */
+        body.theme-dark {
+            background-image: linear-gradient(rgba(9, 9, 11, 0.94), rgba(9, 9, 11, 0.94)), url('https://i.ibb.co/Mk34CmcS/Gemini-Generated-Image-odv3xoodv3xoodv3-removebg-preview.png');
+            color: #FAFAFA;
+        }
+        body.theme-dark .bg-white, body.theme-dark .corp-card, body.theme-dark nav.bg-white\/80 { background-color: #18181b !important; border-color: #27272a !important; color: #FAFAFA !important; }
+        body.theme-dark .text-corp-primary, body.theme-dark h2, body.theme-dark h3, body.theme-dark h4 { color: #FAFAFA !important; }
+        body.theme-dark .text-corp-secondary, body.theme-dark .text-slate-500, body.theme-dark .text-corp-muted { color: #A1A1AA !important; }
+        body.theme-dark .border-slate-200, body.theme-dark .border-corp-border { border-color: #27272a !important; }
+        body.theme-dark .bg-slate-50, body.theme-dark .bg-slate-100 { background-color: #27272a !important; }
+        body.theme-dark input, body.theme-dark select, body.theme-dark textarea { background-color: #18181b !important; color: #FAFAFA !important; border-color: #3F3F46 !important; }
+        body.theme-dark .nav-link-mobile.text-corp-secondary:hover { color: #FAFAFA !important; background-color: #27272a !important; }
+        body.theme-dark .nav-link.bg-blue-50, body.theme-dark .nav-link-mobile.bg-blue-50 { background-color: rgba(37, 99, 235, 0.2) !important; color: #60A5FA !important; }
+        body.theme-dark .fc { background: #18181b !important; color: #FAFAFA !important; }
+        body.theme-dark .fc-theme-standard td, body.theme-dark .fc-theme-standard th { border-color: #27272a !important; }
+        body.theme-dark .fc-toolbar-title { color: #FAFAFA !important; }
+        body.theme-dark .fc-col-header-cell-cushion { color: #A1A1AA !important; }
+        body.theme-dark .fc-daygrid-day-number { color: #FAFAFA !important; }
+        body.theme-dark .fc a { color: #FAFAFA !important; }
+        
+        body.theme-dark .fc-multimonth-title { color: #FAFAFA !important; font-weight: bold; }
+        body.theme-dark .fc-multimonth-daygrid-table td, body.theme-dark .fc-multimonth-daygrid-table th { border-color: #27272a !important; }
+        body.theme-dark .fc-multimonth-daygrid-table .fc-daygrid-day-number { color: #A1A1AA !important; }
+        body.theme-dark .fc-multimonth-daygrid-table .fc-daygrid-day-number:hover { color: #FAFAFA !important; }
+
+        body.theme-dark .fc-button-primary { background-color: #27272a !important; color: #FAFAFA !important; border-color: #3F3F46 !important; }
+        body.theme-dark .fc-button-primary:hover { background-color: #3F3F46 !important; color: #fff !important; }
+        body.theme-dark .fc-button-active { background-color: #2563EB !important; border-color: #2563EB !important; color: white !important;}
+        body.theme-dark .fc-day-today { background-color: rgba(37, 99, 235, 0.15) !important; }
+
+        /* --- THEME GRAY SPACE --- */
+        body.theme-gray {
+            background-image: linear-gradient(rgba(15, 23, 42, 0.94), rgba(15, 23, 42, 0.94)), url('https://i.ibb.co/Mk34CmcS/Gemini-Generated-Image-odv3xoodv3xoodv3-removebg-preview.png');
+            color: #F8FAFC;
+        }
+        body.theme-gray .bg-white, body.theme-gray .corp-card, body.theme-gray nav.bg-white\/80 { background-color: #1E293B !important; border-color: #334155 !important; color: #F8FAFC !important;}
+        body.theme-gray .text-corp-primary, body.theme-gray h2, body.theme-gray h3, body.theme-gray h4 { color: #F8FAFC !important; }
+        body.theme-gray .text-corp-secondary, body.theme-gray .text-slate-500, body.theme-gray .text-corp-muted { color: #94A3B8 !important; }
+        body.theme-gray .border-slate-200, body.theme-gray .border-corp-border { border-color: #334155 !important; }
+        body.theme-gray .bg-slate-50, body.theme-gray .bg-slate-100 { background-color: #334155 !important; }
+        body.theme-gray input, body.theme-gray select, body.theme-gray textarea { background-color: #1E293B !important; color: #F8FAFC !important; border-color: #475569 !important; }
+        body.theme-gray .nav-link-mobile.text-corp-secondary:hover { color: #F8FAFC !important; background-color: #334155 !important; }
+        body.theme-gray .nav-link.bg-blue-50, body.theme-gray .nav-link-mobile.bg-blue-50 { background-color: rgba(37, 99, 235, 0.2) !important; color: #60A5FA !important; }
+        body.theme-gray .fc { background: #1E293B !important; color: #F8FAFC !important; }
+        body.theme-gray .fc-theme-standard td, body.theme-gray .fc-theme-standard th { border-color: #334155 !important; }
+        body.theme-gray .fc-toolbar-title { color: #F8FAFC !important; }
+        body.theme-gray .fc-col-header-cell-cushion { color: #94A3B8 !important; }
+        body.theme-gray .fc-daygrid-day-number { color: #F8FAFC !important; }
+        body.theme-gray .fc a { color: #F8FAFC !important; }
+        
+        body.theme-gray .fc-multimonth-title { color: #F8FAFC !important; font-weight: bold; }
+        body.theme-gray .fc-multimonth-daygrid-table td, body.theme-gray .fc-multimonth-daygrid-table th { border-color: #334155 !important; }
+        body.theme-gray .fc-multimonth-daygrid-table .fc-daygrid-day-number { color: #94A3B8 !important; }
+        body.theme-gray .fc-multimonth-daygrid-table .fc-daygrid-day-number:hover { color: #F8FAFC !important; }
+
+        body.theme-gray .fc-button-primary { background-color: #334155 !important; color: #F8FAFC !important; border-color: #475569 !important; }
+        body.theme-gray .fc-button-primary:hover { background-color: #475569 !important; color: #fff !important;}
+        body.theme-gray .fc-button-active { background-color: #2563EB !important; border-color: #2563EB !important; color: white !important;}
+        body.theme-gray .fc-day-today { background-color: rgba(37, 99, 235, 0.15) !important; }
+
+        /* --- STYLING DO RODAPÉ CINEMATOGRÁFICO TRANSPARENTE E GLASS --- */
+        .cinematic-footer {
+            position: relative;
+            overflow: hidden;
+            border-top: 1px solid #E2E8F0;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+            background: rgba(248, 250, 252, 0.8) !important; /* Translúcido no modo claro */
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        body.theme-dark .cinematic-footer { 
+            border-top-color: #27272a !important; 
+            background: rgba(24, 24, 27, 0.8) !important; 
+        }
+        body.theme-gray .cinematic-footer { 
+            border-top-color: #334155 !important; 
+            background: rgba(30, 41, 59, 0.8) !important; 
+        }
+        
+        .footer-mask {
+            position: absolute;
+            inset: 0;
+            /* Máscara de fusão de cima para baixo */
+            background: linear-gradient(to bottom, rgba(248, 250, 252, 0) 0%, rgba(248, 250, 252, 0.5) 100%) !important;
+            pointer-events: none;
+            z-index: 2;
+        }
+        body.theme-dark .footer-mask {
+            background: linear-gradient(to bottom, rgba(24, 24, 27, 0) 0%, rgba(24, 24, 27, 0.5) 100%) !important;
+        }
+        body.theme-gray .footer-mask {
+            background: linear-gradient(to bottom, rgba(30, 41, 59, 0) 0%, rgba(30, 41, 59, 0.5) 100%) !important;
+        }
+
+        .footer-content {
+            position: relative;
+            z-index: 10;
+        }
+
+        /* --- MEDIA QUERIES PARA MOBILE EXTREMO (RESPONSIVIDADE IOS & ANDROID) --- */
+        @media (max-width: 640px) {
+            .fc-header-toolbar {
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 10px !important;
+                align-items: center !important;
+            }
+            .fc-toolbar-title {
+                font-size: 1.05rem !important;
+                text-align: center !important;
+            }
+            .fc-button-group {
+                display: flex !important;
+                width: 100% !important;
+                justify-content: center !important;
+            }
+            .fc-button {
+                padding: 6px 10px !important;
+                font-size: 0.725rem !important;
+                flex: 1 !important;
+                text-align: center !important;
+            }
+            .fc-toolbar-chunk {
+                width: 100% !important;
+                display: flex !important;
+                justify-content: center !important;
+            }
+            .fc-multimonth {
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 20px !important;
+            }
+            .fc-multimonth-month {
+                width: 100% !important;
+            }
+            main {
+                padding-top: 5rem !important;
+                padding-bottom: 2rem !important;
+            }
+            .corp-card {
+                padding: 12px !important;
+            }
+            button, select, input, textarea {
+                min-height: 44px;
+            }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen relative notranslate">
+
+    <nav class="bg-white/80 backdrop-blur-md border-b border-slate-200 fixed w-full z-30 top-0 transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-corp-accent flex items-center justify-center text-white font-bold overflow-hidden border-2 border-corp-border">
+                            <img src="https://i.ibb.co/7dn8MYf0/Whats-App-Image-2026-05-19-at-11-54-53.jpg" alt="Marcio David" class="w-full h-full object-cover">
+                        </div>
+                        <div>
+                            <span class="text-corp-primary font-bold text-md leading-tight block">Marcio David</span>
+                            <span class="text-corp-muted text-[10px] font-medium tracking-widest uppercase">Management</span>
+                        </div>
+                    </div>
+                    <div class="hidden md:block">
+                        <div class="ml-10 flex items-baseline space-x-6">
+                            <button type="button" onclick="activateTab(this, 'view-dashboard')" class="nav-link text-corp-accent bg-blue-50 px-3 py-2 rounded-md text-sm font-medium cursor-pointer">Painel</button>
+                            <button type="button" onclick="activateTab(this, 'view-reports')" class="nav-link text-corp-secondary hover:text-corp-primary hover:bg-slate-50 px-3 py-2 rounded-md text-sm font-medium transition-colors cursor-pointer">Relatórios</button>
+                            <button type="button" onclick="activateTab(this, 'view-settings')" class="nav-link text-corp-secondary hover:text-corp-primary hover:bg-slate-50 px-3 py-2 rounded-md text-sm font-medium transition-colors cursor-pointer">Configurações</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <button class="text-corp-secondary hover:text-corp-primary relative p-2">
+                        <i class="far fa-bell text-lg"></i>
+                        <span class="absolute top-1 right-1 flex h-2 w-2">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                        </span>
+                    </button>
+                    <button onclick="toggleMobileMenu()" class="md:hidden text-corp-secondary hover:text-corp-primary p-2 focus:outline-none" aria-label="Abrir Menu">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="mobile-menu" class="hidden md:hidden bg-white/95 border-b border-slate-200 py-3 px-4 space-y-1 transition-all">
+            <button onclick="activateTab(document.querySelectorAll('.nav-link')[0], 'view-dashboard'); toggleMobileMenu();" class="w-full text-left nav-link-mobile text-corp-accent bg-blue-50 px-3 py-2.5 rounded-md text-sm font-semibold block">Painel</button>
+            <button onclick="activateTab(document.querySelectorAll('.nav-link')[1], 'view-reports'); toggleMobileMenu();" class="w-full text-left nav-link-mobile text-corp-secondary hover:bg-slate-50 px-3 py-2.5 rounded-md text-sm font-semibold block">Relatórios</button>
+            <button onclick="activateTab(document.querySelectorAll('.nav-link')[2], 'view-settings'); toggleMobileMenu();" class="w-full text-left nav-link-mobile text-corp-secondary hover:bg-slate-50 px-3 py-2.5 rounded-md text-sm font-semibold block">Configurações</button>
+        </div>
+    </nav>
+
+    <main class="pt-24 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto flex-grow w-full relative z-10">
+        
+        <div id="view-dashboard">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-4">
+                <div>
+                    <h2 class="text-2xl font-bold text-corp-primary tracking-tight">Agenda de Eventos</h2>
+                    <p class="text-sm text-corp-secondary mt-1">Gerencie seus compromissos, gigs e faturamentos.</p>
+                </div>
+                <div class="flex flex-wrap gap-2 sm:gap-3">
+                    <button onclick="exportAvailabilityScreenshot()" class="px-3.5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition-colors text-xs sm:text-sm font-semibold shadow-sm flex items-center gap-2">
+                        <i class="fas fa-camera"></i> Exportar Disponibilidade (WhatsApp)
+                    </button>
+                    <button onclick="activateTab(document.querySelectorAll('.nav-link')[1], 'view-reports')" class="px-3.5 py-2.5 bg-white border border-corp-border text-corp-secondary rounded-lg hover:bg-slate-50 transition-colors text-xs sm:text-sm font-semibold shadow-sm flex items-center gap-2">
+                        <i class="fas fa-chart-bar"></i> Gerar Relatórios
+                    </button>
+                    <button onclick="resetAddModal()" class="px-3.5 py-2.5 bg-corp-accent hover:bg-corp-accent-hover text-white rounded-lg transition-colors text-xs sm:text-sm font-semibold shadow-sm flex items-center gap-2">
+                        <i class="fas fa-plus"></i> Adicionar Evento
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                <div class="lg:col-span-1 flex flex-col gap-6">
+                    <div class="corp-card p-5">
+                        <h3 class="text-xs font-semibold text-corp-primary uppercase tracking-wider mb-4">Resumo Mensal</h3>
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+                                <span class="text-xs text-corp-secondary flex items-center gap-2"><i class="fas fa-check-circle text-green-500"></i> Confirmados</span>
+                                <span class="font-bold text-corp-primary" id="stat-confirmed">0</span>
+                            </div>
+                            <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+                                <span class="text-xs text-corp-secondary flex items-center gap-2"><i class="fas fa-clock text-amber-500"></i> Pendentes</span>
+                                <span class="font-bold text-corp-primary" id="stat-pending">0</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs text-corp-secondary flex items-center gap-2"><i class="fas fa-calendar-alt text-corp-accent"></i> Total Gigs</span>
+                                <span class="font-bold text-corp-primary" id="stat-total">0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="corp-card flex flex-col h-full max-h-[400px]">
+                        <div class="p-4 border-b border-slate-100">
+                            <h3 class="text-xs font-semibold text-corp-primary uppercase tracking-wider">Próximos Gigs</h3>
+                        </div>
+                        <div class="p-2 overflow-y-auto flex-1 space-y-2" id="upcoming-events-list">
+                            </div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-3 corp-card p-4 sm:p-5 relative">
+                    <div id="calendar" class="min-h-[500px] sm:min-h-[600px]"></div>
+                </div>
+            </div> 
+        </div>
+
+        <div id="view-reports" class="hidden space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-2 gap-4">
+                <div>
+                    <h2 class="text-2xl font-bold text-corp-primary tracking-tight">Relatórios e Estatísticas</h2>
+                    <p class="text-sm text-corp-secondary mt-1">Análise de desempenho, gráficos e exportação de dados.</p>
+                </div>
+                <div class="flex gap-2">
+                    <select id="reportPeriod" class="px-3 py-2 bg-white border border-corp-border text-corp-primary rounded-lg text-sm font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-corp-accent/20 cursor-pointer">
+                        <option value="anual">Eventos Deste Ano</option>
+                        <option value="mensal">Eventos Deste Mês</option>
+                        <option value="semanal">Eventos Desta Semana</option>
+                        <option value="todos">Histórico Completo</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="corp-card p-5">
+                    <h3 class="text-xs font-semibold text-corp-primary uppercase tracking-wider mb-4 flex items-center gap-2"><i class="far fa-chart-bar text-corp-muted"></i> Frequência Mensal</h3>
+                    <div class="relative h-64 w-full">
+                        <canvas id="monthlyChart"></canvas>
+                    </div>
+                </div>
+                <div class="corp-card p-5">
+                    <h3 class="text-xs font-semibold text-corp-primary uppercase tracking-wider mb-4 flex items-center gap-2"><i class="fas fa-chart-pie text-corp-muted"></i> Distribuição por Tipo</h3>
+                    <div class="relative h-64 w-full flex justify-center">
+                        <canvas id="typeChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="corp-card p-6 border-l-4 border-l-corp-accent bg-slate-50/50">
+                <h3 class="text-sm font-semibold text-corp-primary uppercase tracking-wider mb-1">Exportar Documentos Oficiais</h3>
+                <p class="text-xs text-corp-secondary mb-5">Os documentos são gerados automaticamente com a marca e layout da empresa com base no período selecionado acima.</p>
+                <div class="flex flex-wrap gap-3">
+                    <button onclick="exportData('excel')" class="px-5 py-2.5 bg-[#107C41] hover:bg-[#0B5A2F] text-white rounded-lg transition-colors text-sm font-medium shadow-md flex items-center gap-2">
+                        <i class="fas fa-file-excel text-lg"></i> Planilha Excel
+                    </button>
+                    <button onclick="exportData('pdf')" class="px-5 py-2.5 bg-[#DC2626] hover:bg-[#B91C1C] text-white rounded-lg transition-colors text-sm font-medium shadow-md flex items-center gap-2">
+                        <i class="fas fa-file-pdf text-lg"></i> Documento PDF
+                    </button>
+                    <button onclick="exportData('html')" class="px-5 py-2.5 bg-corp-primary hover:bg-slate-800 text-white rounded-lg transition-colors text-sm font-medium shadow-md flex items-center gap-2">
+                        <i class="fas fa-file-code text-lg"></i> Página HTML
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="view-settings" class="hidden space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4">
+                <div>
+                    <h2 class="text-2xl font-bold text-corp-primary tracking-tight">Configurações do Sistema</h2>
+                    <p class="text-sm text-corp-secondary mt-1">Personalize a aparência e preferências da sua agenda.</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 gap-6">
+                <div class="corp-card p-6">
+                    <h3 class="text-xs font-semibold text-corp-primary uppercase tracking-wider mb-4 flex items-center gap-2"><i class="fas fa-palette text-corp-muted"></i> Aparência e Tema</h3>
+                    <p class="text-sm text-corp-secondary mb-5">Escolha o esquema de cores que melhor se adapta ao seu ambiente de trabalho.</p>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <button onclick="setTheme('theme-light')" class="flex flex-col items-center gap-3 p-4 rounded-xl border-2 border-corp-accent bg-slate-50 transition-all hover:shadow-md theme-btn" id="btn-theme-light">
+                            <div class="w-full h-16 rounded-lg border border-slate-200 flex flex-col p-2 gap-1" style="background-color: #ffffff;">
+                                <div class="w-1/2 h-2 rounded" style="background-color: #e2e8f0;"></div>
+                                <div class="w-full h-full rounded mt-1" style="background-color: #f8fafc;"></div>
+                            </div>
+                            <span class="text-xs font-bold text-corp-primary">Claro (Padrão)</span>
+                        </button>
+                        
+                        <button onclick="setTheme('theme-dark')" class="flex flex-col items-center gap-3 p-4 rounded-xl border-2 border-transparent bg-slate-50 transition-all hover:shadow-md theme-btn" id="btn-theme-dark">
+                            <div class="w-full h-16 rounded-lg border flex flex-col p-2 gap-1" style="background-color: #18181b; border-color: #27272a;">
+                                <div class="w-1/2 h-2 rounded" style="background-color: #3f3f46;"></div>
+                                <div class="w-full h-full rounded mt-1" style="background-color: #27272a;"></div>
+                            </div>
+                            <span class="text-xs font-bold text-corp-primary">Dark Black</span>
+                        </button>
+
+                        <button onclick="setTheme('theme-gray')" class="flex flex-col items-center gap-3 p-4 rounded-xl border-2 border-transparent bg-slate-50 transition-all hover:shadow-md theme-btn" id="btn-theme-gray">
+                            <div class="w-full h-16 rounded-lg border flex flex-col p-2 gap-1" style="background-color: #1e293b; border-color: #334155;">
+                                <div class="w-1/2 h-2 rounded" style="background-color: #475569;"></div>
+                                <div class="w-full h-full rounded mt-1" style="background-color: #334155;"></div>
+                            </div>
+                            <span class="text-xs font-bold text-corp-primary">Cinza Espacial</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="branded-export-container" class="hidden">
+            <div id="branded-export-content" style="padding: 40px; font-family: 'Inter', sans-serif; color: #0F172A; background: #fff; max-width: 800px; margin: 0 auto;">
+                <div style="border-bottom: 2px solid #2563EB; padding-bottom: 20px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: flex-end;">
+                    <div>
+                        <h1 style="margin: 0; color: #0F172A; font-size: 26px; font-weight: 800; letter-spacing: -0.5px;">MARCIO DAVID <span style="color: #2563EB;">|</span> DJ</h1>
+                        <p style="margin: 4px 0 0 0; color: #475569; font-size: 13px; font-weight: 500; text-transform: uppercase; letter-spacing: 1px;">Relatório Analítico de Gigs</p>
+                    </div>
+                    <div style="text-align: right;">
+                        <p style="margin: 0; color: #64748B; font-size: 11px; text-transform: uppercase; font-weight: 600;">Data de Emissão: <span id="export-date" style="color:#0F172A"></span></p>
+                        <p style="margin: 4px 0 0 0; color: #64748B; font-size: 11px; text-transform: uppercase; font-weight: 600;">Período Analisado: <span id="export-period" style="color:#0F172A"></span></p>
+                    </div>
+                </div>
+                
+                <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px;">
+                    <thead>
+                        <tr style="background-color: #F8FAFC;">
+                            <th style="padding: 12px; text-align: left; border-bottom: 2px solid #E2E8F0; font-size: 11px; text-transform: uppercase; color: #64748B;">Data</th>
+                            <th style="padding: 12px; text-align: left; border-bottom: 2px solid #E2E8F0; font-size: 11px; text-transform: uppercase; color: #64748B;">Detalhes do Evento</th>
+                            <th style="padding: 12px; text-align: left; border-bottom: 2px solid #E2E8F0; font-size: 11px; text-transform: uppercase; color: #64748B;">Classificação</th>
+                            <th style="padding: 12px; text-align: right; border-bottom: 2px solid #E2E8F0; font-size: 11px; text-transform: uppercase; color: #64748B;">Situação</th>
+                        </tr>
+                    </thead>
+                    <tbody id="export-table-body">
+                        </tbody>
+                </table>
+                <div style="text-align: center; color: #94A3B8; font-size: 10px; margin-top: 60px; border-top: 1px solid #E2E8F0; padding-top: 20px;">
+                    <p style="margin:0;">&copy; Documento Gerado pelo Sistema de Gestão - DJ Marcio David.</p>
+                    <p style="margin:4px 0 0 0;">Informação confidencial. Uso exclusivo da gerência.</p>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="cinematic-footer mt-auto transition-all duration-300 min-h-[140px] flex items-center">
+        <canvas id="footerCanvas" class="absolute inset-0 w-full h-full pointer-events-none z-0"></canvas>
+        <div class="footer-mask"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 footer-content w-full">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+                <p class="text-xs font-semibold text-center md:text-left drop-shadow-sm transition-colors duration-300">
+                    &copy; 2026 Marcio David Management. Todos os direitos reservados.
+                </p>
+                <div class="flex gap-4">
+                    <img src="https://i.ibb.co/Mk34CmcS/Gemini-Generated-Image-odv3xoodv3xoodv3-removebg-preview.png" alt="Assinatura Marcio David" class="h-10 drop-shadow-md opacity-90 object-contain relative z-20">
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <div id="eventModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center transition-opacity p-4">
+        <div class="bg-white rounded-xl shadow-xl w-full max-w-lg overflow-hidden transform transition-all border border-slate-200 corp-card modal-content">
+            <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+                <h3 class="text-lg font-bold text-corp-primary" id="modalTitle">Novo Evento</h3>
+                <button onclick="closeModal('eventModal')" class="text-slate-400 hover:text-slate-600 transition-colors p-2">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="p-4 sm:p-6">
+                <form id="eventForm" class="space-y-4">
+                    <input type="hidden" id="eventId">
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-corp-secondary uppercase mb-1">Título do Evento / Gig</label>
+                            <input type="text" id="eventTitle" required placeholder="Ex: Casamento Jéssica & Lucas" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-corp-accent/50 focus:border-corp-accent text-sm text-corp-primary bg-white">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-corp-secondary uppercase mb-1">Tipo de Evento</label>
+                            <select id="eventType" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-corp-accent/50 focus:border-corp-accent text-sm text-corp-primary bg-white">
+                                <option value="Casamento">Casamento</option>
+                                <option value="Corporativo">Corporativo</option>
+                                <option value="Club/Boate">Club / Boate</option>
+                                <option value="Formatura">Formatura</option>
+ <option value="Aniversário">Aniversário</option>
+                                <option value="Outro">Outro</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-corp-secondary uppercase mb-1">Nome do Cliente</label>
+                            <input type="text" id="eventClient" placeholder="Nome do Contratante" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-corp-accent/50 focus:border-corp-accent text-sm text-corp-primary bg-white">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-corp-secondary uppercase mb-1">Telefone de Contato</label>
+                            <input type="text" id="eventContact" placeholder="Ex: (99) 99999-9999" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-corp-accent/50 focus:border-corp-accent text-sm text-corp-primary bg-white">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-4">
+                        <div class="col-span-2">
+                            <label class="block text-xs font-semibold text-corp-secondary uppercase mb-1">Data</label>
+                            <input type="date" id="eventDate" required class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-corp-accent/50 focus:border-corp-accent text-sm text-corp-primary bg-white">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-corp-secondary uppercase mb-1">Horário</label>
+                            <input type="time" id="eventTime" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-corp-accent/50 focus:border-corp-accent text-sm text-corp-primary bg-white">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-corp-secondary uppercase mb-1">Status</label>
+                        <select id="eventStatus" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-corp-accent/50 focus:border-corp-accent text-sm text-corp-primary bg-white col-span-1">
+                            <option value="confirmado">Confirmado</option>
+                            <option value="pendente">Pendente/Reserva</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-corp-secondary uppercase mb-1">Local / Notas Adicionais</label>
+                        <textarea id="eventNotes" rows="2" placeholder="Local do show, setup de equipamentos, detalhes do contrato..." class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-corp-accent/50 focus:border-corp-accent text-sm resize-none text-corp-primary bg-white"></textarea>
+                    </div>
+
+                    <div class="pt-4 flex justify-end gap-3 border-t border-slate-100">
+                        <button type="button" onclick="closeModal('eventModal')" class="px-4 py-2 text-sm font-medium text-corp-secondary hover:bg-slate-100 rounded-lg transition-colors">Cancelar</button>
+                        <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-corp-accent hover:bg-corp-accent-hover rounded-lg transition-colors shadow-sm">Salvar Evento</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="eventDetailsModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center transition-opacity p-4">
+        <div class="bg-white rounded-xl shadow-xl w-full max-w-md overflow-hidden border border-slate-200 corp-card modal-content">
+            <div class="px-6 py-5 border-b border-slate-100 relative bg-slate-50">
+                <div class="absolute top-4 right-4 flex gap-1">
+                    <button onclick="editEventFromDetails()" class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-200 text-slate-600 hover:bg-blue-100 hover:text-blue-600 transition-colors" title="Editar">
+                        <i class="fas fa-pen text-xs"></i>
+                    </button>
+                    <button onclick="promptDeleteEvent()" class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-200 text-slate-600 hover:bg-red-100 hover:text-red-600 transition-colors" title="Excluir">
+                        <i class="fas fa-trash text-xs"></i>
+                    </button>
+                    <button onclick="closeModal('eventDetailsModal')" class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-200 text-slate-600 hover:bg-slate-300 transition-colors" title="Fechar">
+                        <i class="fas fa-times text-xs"></i>
+                    </button>
+                </div>
+                <div class="flex items-center gap-3 mb-2">
+                    <span id="detailBadge" class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider"></span>
+                </div>
+                <h3 class="text-xl font-bold text-corp-primary pr-24 leading-tight" id="detailTitle"></h3>
+            </div>
+            <div class="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
+                <div class="flex items-start gap-3">
+                    <div class="w-8 flex justify-center text-corp-muted mt-0.5"><i class="fas fa-calendar-alt"></i></div>
+                    <div>
+                        <p class="text-xs text-corp-secondary uppercase font-semibold">Data e Hora</p>
+                        <p class="text-sm font-medium text-corp-primary" id="detailDate"></p>
+                    </div>
+                </div>
+                <div class="flex items-start gap-3">
+                    <div class="w-8 flex justify-center text-corp-muted mt-0.5"><i class="fas fa-tag"></i></div>
+                    <div>
+                        <p class="text-xs text-corp-secondary uppercase font-semibold">Tipo de Evento</p>
+                        <p class="text-sm font-medium text-corp-primary" id="detailType"></p>
+                    </div>
+                </div>
+                
+                <div class="border-t border-slate-100 pt-3 flex items-start gap-3">
+                    <div class="w-8 flex justify-center text-corp-muted mt-0.5"><i class="fas fa-user"></i></div>
+                    <div>
+                        <p class="text-xs text-corp-secondary uppercase font-semibold">Cliente Contratante</p>
+                        <p class="text-sm font-medium text-corp-primary" id="detailClient">Não informado</p>
+                    </div>
+                </div>
+
+                <div class="flex items-start gap-3">
+                    <div class="w-8 flex justify-center text-corp-muted mt-0.5"><i class="fas fa-phone-alt"></i></div>
+                    <div>
+                        <p class="text-xs text-corp-secondary uppercase font-semibold">Telefone / Contato</p>
+                        <div class="flex flex-wrap items-center gap-2 mt-0.5">
+                            <span class="text-sm font-medium text-corp-primary" id="detailContact">Não informado</span>
+                            <a id="whatsappBtn" href="#" target="_blank" class="hidden px-2.5 py-1 bg-green-500 hover:bg-green-600 text-white text-xs font-bold rounded-md transition-colors flex items-center gap-1">
+                                <i class="fab fa-whatsapp"></i> Chamar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border-t border-slate-100 pt-3 flex items-start gap-3">
+                    <div class="w-8 flex justify-center text-corp-muted mt-0.5"><i class="fas fa-align-left"></i></div>
+                    <div>
+                        <p class="text-xs text-corp-secondary uppercase font-semibold">Notas e Detalhes</p>
+                        <p class="text-sm font-medium text-corp-primary bg-slate-50 p-3 rounded-lg border border-slate-100 mt-1" id="detailNotes"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="deleteConfirmModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[60] hidden flex items-center justify-center transition-opacity p-4">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-sm overflow-hidden border border-slate-200 corp-card text-center p-6">
+            <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4 text-red-600 text-2xl">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <h3 class="text-lg font-bold text-corp-primary mb-2">Excluir Evento?</h3>
+            <p class="text-sm text-corp-secondary mb-6">Esta ação não pode ser desfeita. O evento será removido permanentemente da sua agenda.</p>
+            <div class="flex justify-center gap-3">
+                <button onclick="closeModal('deleteConfirmModal')" class="px-5 py-2 text-sm font-medium text-corp-secondary bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors">Cancelar</button>
+                <button onclick="confirmDeleteEvent()" class="px-5 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors shadow-sm">Sim, Excluir</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="screenshotPreviewModal" class="fixed inset-0 bg-slate-900/55 backdrop-blur-sm z-50 hidden flex items-center justify-center transition-opacity p-4">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl overflow-hidden transform transition-all border border-slate-200 corp-card">
+            <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+                <h3 class="text-md sm:text-lg font-bold text-corp-primary flex items-center gap-2">
+                    <i class="fab fa-whatsapp text-emerald-600 text-xl"></i> Compartilhar Disponibilidade
+                </h3>
+                <button onclick="closeModal('screenshotPreviewModal')" class="text-slate-400 hover:text-slate-600 transition-colors p-2">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="p-4 sm:p-6 space-y-4">
+                <p class="text-xs text-corp-secondary leading-relaxed">
+                    Captura gerada com sucesso! Você pode **copiar a imagem diretamente** para colar no chat do WhatsApp ou baixá-la no seu dispositivo.
+                </p>
+                
+                <div class="border border-slate-200 rounded-lg overflow-hidden bg-slate-100 max-h-[350px] overflow-y-auto flex items-center justify-center p-2">
+                    <img id="screenshotPreviewImg" alt="Visualização do Printscreen" class="max-w-full h-auto rounded shadow-sm border border-slate-200">
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-4 border-t border-slate-100">
+                    <button onclick="copyScreenshotToClipboard()" class="px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors text-xs sm:text-sm font-bold shadow-md flex items-center justify-center gap-2">
+                        <i class="fas fa-copy"></i> Copiar Imagem (Colar)
+                    </button>
+                    <button onclick="downloadScreenshot()" class="px-4 py-3 bg-slate-800 hover:bg-slate-900 text-white rounded-lg transition-colors text-xs sm:text-sm font-bold shadow-md flex items-center justify-center gap-2">
+                        <i class="fas fa-download"></i> Baixar Imagem
+                    </button>
+                    <button onclick="shareToWhatsApp()" class="px-4 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition-colors text-xs sm:text-sm font-bold shadow-md flex items-center justify-center gap-2">
+                        <i class="fab fa-whatsapp"></i> Mandar no WhatsApp
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FIREBASE MODULAR INTEGRATION -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Conexão com o seu banco de dados privado
+        // Atenção: Lembre-se de configurar as regras de segurança do seu Firestore (Database) 
+        // para permitir leitura e escrita para que o calendário possa salvar os dados em nuvem.
+        const firebaseConfig = {
+            apiKey: "AIzaSyBGNAhC0wZ34X4bsGv-KaOcW4IM_6WgS4k",
+            authDomain: "dj-marcio-david.firebaseapp.com",
+            projectId: "dj-marcio-david",
+            storageBucket: "dj-marcio-david.firebasestorage.app",
+            messagingSenderId: "848602118707",
+            appId: "1:848602118707:web:c5debb303b1734d1e24146",
+            measurementId: "G-FYYPHWVQCE"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const eventsRef = collection(db, "events");
+
+        let eventsData = [];
+        let calendar;
+        let currentEventId = null;
+        let capturedCalendarBlob = null;
+
+        function getEventDateStr(ev) {
+            let start = ev.start;
+            if (!start) return "";
+            if (start instanceof Date) {
+                const y = start.getFullYear();
+                const m = (start.getMonth() + 1).toString().padStart(2, '0');
+                const d = start.getDate().toString().padStart(2, '0');
+                return `${y}-${m}-${d}`;
+            }
+            if (typeof start === 'string') {
+                if (start.length >= 10) {
+                    return start.substring(0, 10);
+                }
+            }
+            const dObj = new Date(start);
+            if (isNaN(dObj.getTime())) return "";
+            const y = dObj.getFullYear();
+            const m = (dObj.getMonth() + 1).toString().padStart(2, '0');
+            const d = dObj.getDate().toString().padStart(2, '0');
+            return `${y}-${m}-${d}`;
+        }
+
+        function getEventStatus(ev) {
+            if (ev.extendedProps && ev.extendedProps.status) {
+                return ev.extendedProps.status;
+            }
+            if (ev.status) return ev.status;
+            return 'confirmado';
+        }
+
+        function getEventType(ev) {
+            if (ev.extendedProps && ev.extendedProps.type) {
+                return ev.extendedProps.type;
+            }
+            if (ev.type) return ev.type;
+            return 'Outro';
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('dj_marcio_theme') || 'theme-light';
+            setTheme(savedTheme, false);
+
+            const calendarEl = document.getElementById('calendar');
+
+            calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                locale: 'pt-br',
+                themeSystem: 'standard',
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'multiMonthYear,dayGridMonth,timeGridWeek,listMonth'
+                },
+                buttonText: {
+                    today: 'Hoje',
+                    year: 'Ano',
+                    month: 'Mês',
+                    week: 'Semana',
+                    list: 'Lista'
+                },
+                events: eventsData,
+                editable: true,
+                selectable: true,
+                dayMaxEvents: true,
+                eventTimeFormat: { hour: '2-digit', minute: '2-digit', meridiem: false },
+                
+                eventDidMount: function(info) {
+                    const status = info.event.extendedProps.status;
+                    if (status === 'confirmado') {
+                        info.el.style.backgroundColor = '#2563EB';
+                        info.el.style.color = '#ffffff';
+                    } else {
+                        info.el.style.backgroundColor = '#F59E0B';
+                        info.el.style.color = '#ffffff';
+                    }
+                },
+
+                dateClick: function(info) {
+                    resetAddModal();
+                    document.getElementById('eventDate').value = info.dateStr;
+                    openModal('eventModal');
+                },
+
+                eventClick: function(info) {
+                    showEventDetails(info.event);
+                },
+                
+                eventDrop: function(info) {
+                    const eventRef = doc(db, "events", info.event.id);
+                    updateDoc(eventRef, {
+                        start: info.event.start ? info.event.start.toISOString() : null,
+                        end: info.event.end ? info.event.end.toISOString() : null
+                    }).catch(err => {
+                        console.error("Erro no drag/drop:", err);
+                        info.revert();
+                        showNotification("Erro ao atualizar data no servidor.");
+                    });
+                }
+            });
+
+            calendar.render();
+
+            // Sincronização em Tempo Real (Firebase Realtime Listener)
+            onSnapshot(eventsRef, (snapshot) => {
+                eventsData = [];
+                snapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    eventsData.push({
+                        id: docSnap.id,
+                        title: data.title,
+                        start: data.start,
+                        end: data.end || null,
+                        allDay: data.allDay || false,
+                        extendedProps: data.extendedProps || {}
+                    });
+                });
+
+                if (calendar) {
+                    calendar.removeAllEvents();
+                    calendar.addEventSource(eventsData);
+                }
+                updateDashboardStats();
+                renderUpcomingEvents();
+            }, (error) => {
+                console.error("Erro de conexão Firebase:", error);
+                showNotification("Erro ao sincronizar. Verifique suas regras no Firestore.");
+            });
+
+            initFooterEqualizer();
+        });
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        function openModal(id) {
+            document.getElementById(id).classList.remove('hidden');
+        }
+
+        window.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal('eventModal');
+                closeModal('eventDetailsModal');
+                closeModal('deleteConfirmModal');
+                closeModal('screenshotPreviewModal');
+            }
+        });
+
+        function closeModal(id) {
+            document.getElementById(id).classList.add('hidden');
+        }
+
+        function resetAddModal() {
+            document.getElementById('eventForm').reset();
+            document.getElementById('eventId').value = '';
+            document.getElementById('modalTitle').textContent = 'Novo Evento';
+            currentEventId = null;
+            openModal('eventModal');
+        }
+
+        document.getElementById('eventForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const id = document.getElementById('eventId').value;
+            const title = document.getElementById('eventTitle').value;
+            const date = document.getElementById('eventDate').value;
+            const time = document.getElementById('eventTime').value;
+            const type = document.getElementById('eventType').value;
+            const status = document.getElementById('eventStatus').value;
+            const notes = document.getElementById('eventNotes').value || 'Sem notas adicionais.';
+            const clientName = document.getElementById('eventClient').value || '';
+            const clientContact = document.getElementById('eventContact').value || '';
+
+            const [yearStr, monthStr, dayStr] = date.split('-');
+            let startDateTime;
+            let endDateTime = null;
+
+            if (time) {
+                const [hourStr, minStr] = time.split(':');
+                startDateTime = new Date(yearStr, monthStr - 1, dayStr, hourStr, minStr);
+                endDateTime = new Date(startDateTime.getTime() + 4 * 60 * 60 * 1000);
+            } else {
+                startDateTime = new Date(yearStr, monthStr - 1, dayStr);
+            }
+
+            const fbEvent = {
+                title: title,
+                start: startDateTime.toISOString(),
+                end: endDateTime ? endDateTime.toISOString() : null,
+                allDay: !time,
+                extendedProps: { type, status, notes, clientName, clientContact }
+            };
+
+            try {
+                if (id) {
+                    // Update
+                    await updateDoc(doc(db, "events", id), fbEvent);
+                    showNotification('Evento atualizado com sucesso!');
+                } else {
+                    // Add
+                    await addDoc(eventsRef, fbEvent);
+                    showNotification('Evento adicionado com sucesso!');
+                }
+                closeModal('eventModal');
+            } catch (error) {
+                console.error("Erro ao salvar:", error);
+                showNotification('Erro ao salvar o evento no Firebase. Verifique permissões.');
+            }
+        });
+
+        function showEventDetails(event) {
+            currentEventId = event.id;
+            document.getElementById('detailTitle').textContent = event.title;
+            
+            const badge = document.getElementById('detailBadge');
+            if (event.extendedProps.status === 'confirmado') {
+                badge.textContent = 'Confirmado';
+                badge.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-green-100 text-green-700';
+            } else {
+                badge.textContent = 'Pendente';
+                badge.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-amber-100 text-amber-700';
+            }
+
+            let dateStr = new Date(event.start).toLocaleDateString('pt-BR');
+            if (!event.allDay && event.start) {
+                const startD = new Date(event.start);
+                dateStr += ` às ${startD.toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'})}`;
+            }
+            document.getElementById('detailDate').textContent = dateStr;
+            document.getElementById('detailType').textContent = event.extendedProps.type || 'Não especificado';
+            document.getElementById('detailNotes').textContent = event.extendedProps.notes || 'Sem notas.';
+
+            const clientName = event.extendedProps.clientName || '';
+            const clientContact = event.extendedProps.clientContact || '';
+
+            document.getElementById('detailClient').textContent = clientName || 'Não informado';
+            
+            const contactLabel = document.getElementById('detailContact');
+            const waBtn = document.getElementById('whatsappBtn');
+            
+            if (clientContact) {
+                contactLabel.textContent = clientContact;
+                const cleanPhone = clientContact.replace(/\D/g, '');
+                waBtn.href = `https://wa.me/55${cleanPhone}`;
+                waBtn.classList.remove('hidden');
+            } else {
+                contactLabel.textContent = 'Não informado';
+                waBtn.classList.add('hidden');
+            }
+
+            openModal('eventDetailsModal');
+        }
+
+        function editEventFromDetails() {
+            if(!currentEventId) return;
+            // Procurar no Array Local que agora é sincronizado
+            const eventData = eventsData.find(e => e.id === currentEventId);
+            if(!eventData) return;
+
+            document.getElementById('modalTitle').textContent = 'Editar Evento';
+            document.getElementById('eventId').value = eventData.id;
+            document.getElementById('eventTitle').value = eventData.title;
+            
+            const dateObj = new Date(eventData.start);
+            const isoDate = `${dateObj.getFullYear()}-${(dateObj.getMonth()+1).toString().padStart(2,'0')}-${dateObj.getDate().toString().padStart(2,'0')}`;
+            document.getElementById('eventDate').value = isoDate;
+            
+            if (!eventData.allDay) {
+                const hrs = dateObj.getHours().toString().padStart(2, '0');
+                const mins = dateObj.getMinutes().toString().padStart(2, '0');
+                document.getElementById('eventTime').value = `${hrs}:${mins}`;
+            } else {
+                document.getElementById('eventTime').value = '';
+            }
+
+            document.getElementById('eventType').value = eventData.extendedProps.type || 'Casamento';
+            document.getElementById('eventStatus').value = eventData.extendedProps.status || 'confirmado';
+            document.getElementById('eventNotes').value = eventData.extendedProps.notes || '';
+            document.getElementById('eventClient').value = eventData.extendedProps.clientName || '';
+            document.getElementById('eventContact').value = eventData.extendedProps.clientContact || '';
+
+            closeModal('eventDetailsModal');
+            openModal('eventModal');
+        }
+
+        function promptDeleteEvent() {
+            openModal('deleteConfirmModal');
+        }
+
+        async function confirmDeleteEvent() {
+            if (currentEventId) {
+                try {
+                    await deleteDoc(doc(db, "events", currentEventId));
+                    closeModal('deleteConfirmModal');
+                    closeModal('eventDetailsModal');
+                    showNotification('Evento excluído permanentemente.');
+                    currentEventId = null;
+                } catch (error) {
+                    console.error("Erro ao deletar:", error);
+                    showNotification("Erro ao excluir. Verifique permissões do Firebase.");
+                }
+            }
+        }
+
+        function updateDashboardStats() {
+            const currentMonth = new Date().getMonth();
+            const currentYear = new Date().getFullYear();
+            
+            let confirmed = 0;
+            let pending = 0;
+            
+            eventsData.forEach(ev => {
+                const dateStr = getEventDateStr(ev);
+                if (!dateStr) return;
+                const [y, m, d] = dateStr.split('-').map(Number);
+                if ((m - 1) === currentMonth && y === currentYear) {
+                    const status = getEventStatus(ev);
+                    if (status === 'confirmado') confirmed++;
+                    else pending++;
+                }
+            });
+
+            document.getElementById('stat-confirmed').textContent = confirmed;
+            document.getElementById('stat-pending').textContent = pending;
+            document.getElementById('stat-total').textContent = confirmed + pending;
+        }
+
+        function renderUpcomingEvents() {
+            const listContainer = document.getElementById('upcoming-events-list');
+            listContainer.innerHTML = '';
+            
+            const now = new Date();
+            now.setHours(0,0,0,0);
+            
+            const upcoming = eventsData
+                .filter(ev => {
+                    const dateStr = getEventDateStr(ev);
+                    if (!dateStr) return false;
+                    const [y, m, d] = dateStr.split('-').map(Number);
+                    const evDate = new Date(y, m - 1, d);
+                    return evDate >= now;
+                })
+                .sort((a, b) => {
+                    const dateA = getEventDateStr(a);
+                    const dateB = getEventDateStr(b);
+                    return dateA.localeCompare(dateB);
+                })
+                .slice(0, 5);
+
+            if(upcoming.length === 0) {
+                listContainer.innerHTML = '<p class="text-xs text-corp-muted text-center py-4">Nenhum evento futuro próximo.</p>';
+                return;
+            }
+
+            upcoming.forEach(ev => {
+                const dateStr = getEventDateStr(ev);
+                const [y, m, d] = dateStr.split('-').map(Number);
+                const dateObj = new Date(y, m - 1, d);
+                const day = d.toString().padStart(2, '0');
+                const month = dateObj.toLocaleDateString('pt-BR', { month: 'short' }).replace('.', '');
+                
+                const status = getEventStatus(ev);
+                const isConfirmed = status === 'confirmado';
+                const statusColor = isConfirmed ? 'bg-corp-accent' : 'bg-amber-500';
+                const id = ev.id;
+                const title = ev.title;
+                const type = getEventType(ev);
+
+                const div = document.createElement('div');
+                div.className = "flex items-center gap-3 p-2.5 rounded-lg hover:bg-slate-50 border border-transparent hover:border-slate-100 transition-colors cursor-pointer group";
+                div.onclick = () => {
+                    const calEvent = calendar.getEventById(id);
+                    if(calEvent) showEventDetails(calEvent);
+                };
+                
+                div.innerHTML = `
+                    <div class="flex flex-col items-center justify-center w-11 h-11 rounded-lg bg-slate-100 text-corp-primary group-hover:bg-white group-hover:shadow-sm transition-all border border-slate-200">
+                        <span class="text-[9px] font-bold uppercase text-corp-secondary leading-none">${month}</span>
+                        <span class="text-md font-extrabold leading-none mt-1">${day}</span>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-xs font-bold text-corp-primary truncate">${title}</p>
+                        <p class="text-[10px] text-corp-secondary truncate">${type}</p>
+                    </div>
+                    <div class="w-2 h-2 rounded-full ${statusColor}" title="${status}"></div>
+                `;
+                listContainer.appendChild(div);
+            });
+        }
+
+        function activateTab(element, viewId = 'view-dashboard') {
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.className = 'nav-link text-corp-secondary hover:text-corp-primary hover:bg-slate-50 px-3 py-2 rounded-md text-sm font-medium cursor-pointer';
+            });
+            if (element && element.classList) {
+                element.className = 'nav-link text-corp-accent bg-blue-50 px-3 py-2 rounded-md text-sm font-medium cursor-pointer';
+            }
+            
+            const views = ['view-dashboard', 'view-reports', 'view-settings'];
+            views.forEach(v => {
+                const el = document.getElementById(v);
+                if (el) el.classList.add('hidden');
+            });
+            
+            const targetView = document.getElementById(viewId);
+            if(targetView) {
+                targetView.classList.remove('hidden');
+                if(viewId === 'view-reports') updateCharts();
+                else if(viewId === 'view-dashboard') setTimeout(() => { calendar.render(); }, 50);
+            }
+        }
+
+        function showNotification(message) {
+            const notif = document.createElement('div');
+            notif.className = 'fixed bottom-4 right-4 bg-corp-primary text-white px-4 py-3 rounded-lg shadow-lg flex items-center gap-3 transform transition-all translate-y-20 opacity-0 z-[70]';
+            notif.innerHTML = `<i class="fas fa-check-circle text-green-400"></i><span class="text-xs sm:text-sm font-medium">${message}</span>`;
+            document.body.appendChild(notif);
+            
+            setTimeout(() => { notif.classList.remove('translate-y-20', 'opacity-0'); }, 10);
+            setTimeout(() => {
+                notif.classList.add('translate-y-20', 'opacity-0');
+                setTimeout(() => notif.remove(), 300);
+            }, 3000);
+        }
+
+        let monthlyChartInstance = null;
+        let typeChartInstance = null;
+
+        function updateCharts() {
+            const period = document.getElementById('reportPeriod').value;
+            const filteredEvents = getFilteredEvents(period);
+
+            const monthsCount = new Array(12).fill(0);
+            const monthNames = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+            const typeCounts = {};
+
+            filteredEvents.forEach(e => {
+                const dateStr = getEventDateStr(e);
+                if (!dateStr) return;
+                const monthIndex = parseInt(dateStr.split('-')[1], 10) - 1;
+                if (monthIndex >= 0 && monthIndex < 12) {
+                    monthsCount[monthIndex]++;
+                }
+                const type = getEventType(e);
+                typeCounts[type] = (typeCounts[type] || 0) + 1;
+            });
+
+            const isDark = document.body.classList.contains('theme-dark') || document.body.classList.contains('theme-gray');
+            const textColor = isDark ? '#94A3B8' : '#475569';
+            Chart.defaults.color = textColor;
+
+            const ctxMonthly = document.getElementById('monthlyChart').getContext('2d');
+            if(monthlyChartInstance) monthlyChartInstance.destroy();
+            monthlyChartInstance = new Chart(ctxMonthly, {
+                type: 'bar',
+                data: { labels: monthNames, datasets: [{ label: 'Gigs / Eventos', data: monthsCount, backgroundColor: '#2563EB', borderRadius: 4, barPercentage: 0.6 }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { stepSize: 1, color: textColor } }, x: { ticks: {color: textColor} } } }
+            });
+
+            const ctxType = document.getElementById('typeChart').getContext('2d');
+            if(typeChartInstance) typeChartInstance.destroy();
+            const typeLabels = Object.keys(typeCounts);
+            const typeData = Object.values(typeCounts);
+            const typeColors = ['#2563EB', '#F59E0B', '#10B981', '#6366F1', '#8B5CF6'];
+
+            typeChartInstance = new Chart(ctxType, {
+                type: 'doughnut',
+                data: { labels: typeLabels, datasets: [{ data: typeData, backgroundColor: typeColors.slice(0, typeLabels.length), borderWidth: 0 }] },
+                options: { responsive: true, maintainAspectRatio: false, cutout: '75%', plugins: { legend: { position: 'right', labels: { boxWidth: 12, usePointStyle: true, color: textColor } } } }
+            });
+        }
+
+        document.getElementById('reportPeriod')?.addEventListener('change', updateCharts);
+
+        function getFilteredEvents(period) {
+            const now = new Date();
+            return eventsData.filter(e => {
+                const dateStr = getEventDateStr(e);
+                if (!dateStr) return false;
+                const [y, m, d] = dateStr.split('-').map(Number);
+                const eYear = y;
+                const eMonth = m - 1;
+
+                if (period === 'anual') return eYear === now.getFullYear();
+                if (period === 'mensal') return eYear === now.getFullYear() && eMonth === now.getMonth();
+                if (period === 'semanal') {
+                    const eDate = new Date(eYear, eMonth, d);
+                    const startOfWeek = new Date(now); startOfWeek.setDate(now.getDate() - now.getDay()); startOfWeek.setHours(0,0,0,0);
+                    const endOfWeek = new Date(startOfWeek); endOfWeek.setDate(startOfWeek.getDate() + 6); endOfWeek.setHours(23,59,59,999);
+                    return eDate >= startOfWeek && eDate <= endOfWeek;
+                }
+                return true; 
+            }).sort((a,b) => {
+                const dateA = getEventDateStr(a);
+                const dateB = getEventDateStr(b);
+                return dateA.localeCompare(dateB);
+            });
+        }
+
+        function exportData(format) {
+            const periodValue = document.getElementById('reportPeriod').value;
+            const periodLabel = document.querySelector(`#reportPeriod option[value="${periodValue}"]`).text;
+            const events = getFilteredEvents(periodValue);
+            
+            if (events.length === 0) { alert('Aviso: Nenhum evento encontrado para este período.'); return; }
+
+            const fileName = `DJ_Marcio_Relatorio_${periodValue.toUpperCase()}`;
+
+            if (format === 'excel') {
+                showNotification('Gerando Planilha Excel...');
+                const dataForExcel = events.map(e => ({
+                    "Data": new Date(e.start).toLocaleDateString('pt-BR'),
+                    "Hora": !e.allDay && e.start ? new Date(e.start).toLocaleTimeString('pt-BR', {hour: '2-digit', minute: '2-digit'}) : '-',
+                    "Evento/Cliente": e.title,
+                    "Cliente Contratante": e.extendedProps.clientName || 'Não Informado',
+                    "Contato": e.extendedProps.clientContact || 'Não Informado',
+                    "Tipo de Evento": e.extendedProps.type,
+                    "Status": e.extendedProps.status.toUpperCase(),
+                    "Notas": e.extendedProps.notes !== 'Sem notas adicionais.' ? e.extendedProps.notes : ''
+                }));
+                const ws = XLSX.utils.json_to_sheet(dataForExcel);
+                const wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, "Agenda");
+                XLSX.writeFile(wb, `${fileName}.xlsx`);
+                
+            } else if (format === 'pdf' || format === 'html') {
+                showNotification(`Processando documento ${format.toUpperCase()}...`);
+                document.getElementById('export-date').textContent = new Date().toLocaleDateString('pt-BR');
+                document.getElementById('export-period').textContent = periodLabel;
+                
+                const tbody = document.getElementById('export-table-body');
+                tbody.innerHTML = '';
+                events.forEach(e => {
+                    const tr = document.createElement('tr');
+                    const statusColor = e.extendedProps.status === 'confirmado' ? '#16a34a' : '#d97706';
+                    tr.innerHTML = `
+                        <td style="padding: 12px; border-bottom: 1px solid #E2E8F0; font-size: 13px; color: #475569;">${new Date(e.start).toLocaleDateString('pt-BR')}</td>
+                        <td style="padding: 12px; border-bottom: 1px solid #E2E8F0; font-size: 14px; color: #0F172A; font-weight: 600;">${e.title}</td>
+                        <td style="padding: 12px; border-bottom: 1px solid #E2E8F0; font-size: 13px; color: #475569;">${e.extendedProps.type}</td>
+                        <td style="padding: 12px; text-align: right; border-bottom: 1px solid #E2E8F0; font-size: 12px;">
+                            <span style="color: ${statusColor}; font-weight: 700; text-transform: uppercase;">${e.extendedProps.status}</span>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+
+                const contentElement = document.getElementById('branded-export-content');
+
+                if (format === 'pdf') {
+                    const opt = { margin: [15, 15, 15, 15], filename: `${fileName}.pdf`, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2, useCORS: true }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } };
+                    html2pdf().set(opt).from(contentElement).save();
+                } else if (format === 'html') {
+                    const htmlContent = `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>${fileName}</title><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"></head><body style="background: #e2e8f0; margin:0; padding:40px; display:flex; justify-content:center;"><div style="box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); border-radius: 8px; overflow: hidden; max-width: 800px; width: 100%;">${contentElement.outerHTML}</div></body></html>`;
+                    const blob = new Blob([htmlContent], { type: 'text/html' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `${fileName}.html`;
+                    a.click();
+                    URL.revokeObjectURL(url);
+                }
+            }
+        }
+
+        async function exportAvailabilityScreenshot() {
+            showNotification('Gerando printscreen profissional da agenda...');
+            const calendarEl = document.getElementById('calendar');
+            if(!calendarEl) return;
+
+            const isDark = document.body.classList.contains('theme-dark');
+            const isGray = document.body.classList.contains('theme-gray');
+            
+            let headerThemeClass = 'bg-white text-corp-primary border-slate-200';
+            let legendTextClass = 'text-corp-secondary';
+            let captureBgColor = '#ffffff';
+
+            if (isDark) {
+                headerThemeClass = 'bg-[#18181b] text-white border-zinc-700';
+                legendTextClass = 'text-zinc-400';
+                captureBgColor = '#18181b';
+            } else if (isGray) {
+                headerThemeClass = 'bg-[#1E293B] text-white border-slate-700';
+                legendTextClass = 'text-slate-400';
+                captureBgColor = '#1E293B';
+            }
+
+            const toolbar = calendarEl.querySelector('.fc-header-toolbar');
+            if (toolbar) toolbar.style.setProperty('display', 'none', 'important');
+
+            const origWidth = calendarEl.style.width;
+            
+            calendarEl.style.width = '1024px';
+            calendar.updateSize(); 
+            
+            await new Promise(r => setTimeout(r, 300));
+
+            const brandHeader = document.createElement('div');
+            brandHeader.id = 'temp-print-header';
+            brandHeader.className = `p-5 mb-4 border-b-2 flex flex-row justify-between items-center w-full ${headerThemeClass}`;
+            brandHeader.innerHTML = `
+                <div class="flex items-center gap-3 sm:gap-4 w-2/3">
+                    <img src="https://i.ibb.co/Mk34CmcS/Gemini-Generated-Image-odv3xoodv3xoodv3-removebg-preview.png" alt="Assinatura Marcio David" class="max-w-[180px] sm:max-w-[260px] max-h-[60px] object-contain drop-shadow-sm flex-shrink-0">
+                    <div class="border-l-2 border-slate-300 pl-3 sm:pl-4 flex-shrink-0">
+                        <p class="text-[10px] sm:text-[12px] text-corp-accent font-bold tracking-widest uppercase leading-tight">AGENDA DE<br>DISPONIBILIDADE</p>
+                    </div>
+                </div>
+                <div class="text-right w-1/3 flex-shrink-0 pl-2">
+                    <h3 class="text-sm sm:text-base font-bold uppercase tracking-wide truncate">${calendar.view.title}</h3>
+                    <p class="text-[9px] sm:text-[11px] ${legendTextClass} font-semibold flex items-center gap-1.5 sm:gap-2 justify-end mt-1">
+                        <span class="inline-block w-2.5 h-2.5 rounded-full bg-[#2563EB]"></span> Confirmado 
+                        <span class="inline-block w-2.5 h-2.5 rounded-full bg-[#F59E0B]"></span> Pré-Reserva
+                    </p>
+                </div>
+            `;
+            
+            calendarEl.insertBefore(brandHeader, calendarEl.firstChild);
+
+            try {
+                const canvas = await html2canvas(calendarEl, {
+                    useCORS: true,
+                    scale: 2,
+                    backgroundColor: captureBgColor,
+                    width: 1024,
+                    windowWidth: 1024,
+                    logging: false
+                });
+
+                const imgData = canvas.toDataURL('image/png');
+                
+                document.getElementById('screenshotPreviewImg').src = imgData;
+                openModal('screenshotPreviewModal');
+
+                canvas.toBlob(blob => {
+                    capturedCalendarBlob = blob;
+                }, 'image/png');
+
+            } catch (err) {
+                console.error("Erro na captura de imagem:", err);
+                showNotification("Não foi possível gerar a captura do calendário.");
+            } finally {
+                if (brandHeader) brandHeader.remove();
+                if (toolbar) toolbar.style.display = '';
+                
+                calendarEl.style.width = origWidth;
+                calendar.updateSize();
+            }
+        }
+
+        async function copyScreenshotToClipboard() {
+            if (!capturedCalendarBlob) {
+                showNotification('Erro: Imagem ainda não carregou totalmente.');
+                return;
+            }
+            try {
+                await navigator.clipboard.write([
+                    new ClipboardItem({
+                        [capturedCalendarBlob.type]: capturedCalendarBlob
+                    })
+                ]);
+                showNotification('Imagem copiada! Agora vá no WhatsApp e cole (Ctrl+V).');
+            } catch (err) {
+                console.warn("Clipboard API bloqueada ou indisponível:", err);
+                showNotification('Dica: Toque e segure na imagem abaixo para salvar/copiar!');
+            }
+        }
+
+        function downloadScreenshot() {
+            const imgData = document.getElementById('screenshotPreviewImg').src;
+            if(!imgData) return;
+            const a = document.createElement('a');
+            a.href = imgData;
+            a.download = `Agenda_Marcio_David_Disponibilidade.png`;
+            a.click();
+            showNotification('Download iniciado com sucesso!');
+        }
+
+        async function shareToWhatsApp() {
+            if (!capturedCalendarBlob) {
+                showNotification('Erro: Imagem da agenda ainda não foi gerada.');
+                return;
+            }
+
+            const text = "Olá! Segue em anexo a minha agenda de disponibilidade atualizada.";
+            
+            if (navigator.canShare && navigator.canShare({ files: [new File([capturedCalendarBlob], 'agenda.png', { type: 'image/png' })] })) {
+                try {
+                    const file = new File([capturedCalendarBlob], 'Agenda_Disponibilidade.png', { type: 'image/png' });
+                    await navigator.share({
+                        title: 'Agenda DJ Marcio David',
+                        text: text,
+                        files: [file]
+                    });
+                    return; 
+                } catch (err) {
+                    console.log("Compartilhamento nativo cancelado ou falhou:", err);
+                }
+            }
+            
+            showNotification('Aviso: Cole (Ctrl+V) a imagem na conversa do WhatsApp!');
+            
+            try {
+                await navigator.clipboard.write([
+                    new ClipboardItem({
+                        [capturedCalendarBlob.type]: capturedCalendarBlob
+                    })
+                ]);
+            } catch (e) {
+                console.warn("Navegador não permitiu copiar automático.", e);
+            }
+
+            const encodedText = encodeURIComponent(text + " [COLE A IMAGEM AQUI (CTRL+V)]");
+            window.open(`https://api.whatsapp.com/send?text=${encodedText}`, '_blank');
+        }
+
+        function setTheme(themeName, showNotif = true) {
+            document.body.classList.remove('theme-light', 'theme-dark', 'theme-gray');
+            
+            if (themeName !== 'theme-light') {
+                document.body.classList.add(themeName);
+            }
+            
+            localStorage.setItem('dj_marcio_theme', themeName);
+            
+            document.querySelectorAll('.theme-btn').forEach(btn => {
+                btn.classList.remove('border-corp-accent');
+                btn.classList.add('border-transparent');
+            });
+            const activeBtn = document.getElementById(`btn-${themeName}`);
+            if(activeBtn) {
+                activeBtn.classList.remove('border-transparent');
+                activeBtn.classList.add('border-corp-accent');
+            }
+
+            if (window.Chart && !document.getElementById('view-reports').classList.contains('hidden')) {
+                updateCharts();
+            }
+            
+            if(showNotif) showNotification('Tema atualizado com sucesso!');
+        }
+
+        function initFooterEqualizer() {
+            const canvas = document.getElementById('footerCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            
+            let waves = [];
+            let particles = [];
+            const numWaves = 4;
+            const numParticles = 35;
+
+            function resizeCanvas() {
+                canvas.width = canvas.parentElement.offsetWidth;
+                canvas.height = canvas.parentElement.offsetHeight;
+            }
+
+            window.addEventListener('resize', resizeCanvas);
+            resizeCanvas();
+
+            for (let i = 0; i < numWaves; i++) {
+                waves.push({
+                    y: canvas.height / 2,
+                    length: 0.003 + (i * 0.0015),
+                    amplitude: 15 + (i * 8),
+                    frequency: 0.008 + (i * 0.004),
+                    phase: i * (Math.PI / 2),
+                    speed: 0.02 + (i * 0.01)
+                });
+            }
+
+            for (let i = 0; i < numParticles; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    radius: Math.random() * 2 + 0.8,
+                    speedY: -(Math.random() * 0.4 + 0.1),
+                    speedX: (Math.random() * 0.3 - 0.15),
+                    opacity: Math.random() * 0.6 + 0.2
+                });
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                const isDark = document.body.classList.contains('theme-dark') || document.body.classList.contains('theme-gray');
+                
+                waves.forEach((wave, index) => {
+                    ctx.beginPath();
+                    
+                    let waveGradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
+                    if (isDark) {
+                        waveGradient.addColorStop(0, 'rgba(37, 99, 235, 0.03)');
+                        waveGradient.addColorStop(0.5, 'rgba(6, 182, 212, 0.22)');
+                        waveGradient.addColorStop(1, 'rgba(139, 92, 246, 0.03)');
+                    } else {
+                        waveGradient.addColorStop(0, 'rgba(15, 23, 42, 0.05)');
+                        waveGradient.addColorStop(0.5, 'rgba(37, 99, 235, 0.38)');
+                        waveGradient.addColorStop(1, 'rgba(30, 41, 59, 0.05)');
+                    }
+
+                    ctx.strokeStyle = waveGradient;
+                    ctx.lineWidth = isDark ? 1.5 : 2.5;
+
+                    for (let x = 0; x < canvas.width; x++) {
+                        const y = canvas.height / 1.7 + Math.sin(x * wave.length + wave.phase) * wave.amplitude * Math.sin(wave.phase * 0.5);
+                        if (x === 0) ctx.moveTo(x, y);
+                        else ctx.lineTo(x, y);
+                    }
+                    
+                    ctx.stroke();
+                    wave.phase += wave.speed;
+                });
+
+                particles.forEach(p => {
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                    
+                    if (isDark) {
+                        ctx.fillStyle = `rgba(147, 197, 253, ${p.opacity})`;
+                    } else {
+                        ctx.fillStyle = `rgba(37, 99, 235, ${p.opacity * 0.8})`;
+                    }
+                    
+                    ctx.shadowBlur = isDark ? 6 : 0;
+                    ctx.shadowColor = '#2563EB';
+                    ctx.fill();
+                    ctx.shadowBlur = 0; 
+
+                    p.y += p.speedY;
+                    p.x += p.speedX;
+
+                    if (p.y < 0) {
+                        p.y = canvas.height;
+                        p.x = Math.random() * canvas.width;
+                    }
+                    if (p.x < 0 || p.x > canvas.width) {
+                        p.x = Math.random() * canvas.width;
+                    }
+                });
+
+                requestAnimationFrame(animate);
+            }
+
+            animate();
+        }
+
+        // Exportando as funções para o escopo global para funcionarem com os botões "onclick" no HTML
+        window.toggleMobileMenu = toggleMobileMenu;
+        window.openModal = openModal;
+        window.closeModal = closeModal;
+        window.resetAddModal = resetAddModal;
+        window.showEventDetails = showEventDetails;
+        window.editEventFromDetails = editEventFromDetails;
+        window.promptDeleteEvent = promptDeleteEvent;
+        window.confirmDeleteEvent = confirmDeleteEvent;
+        window.activateTab = activateTab;
+        window.exportData = exportData;
+        window.exportAvailabilityScreenshot = exportAvailabilityScreenshot;
+        window.copyScreenshotToClipboard = copyScreenshotToClipboard;
+        window.downloadScreenshot = downloadScreenshot;
+        window.shareToWhatsApp = shareToWhatsApp;
+        window.setTheme = setTheme;
+
+    </script>
+</body>
+</html>
