@@ -6,6 +6,16 @@
     <meta name="google" content="notranslate">
     <title>DJ Marcio David | Agenda Corporativa</title>
     
+    <!-- === ADICIONE ISTO AQUI: Configurações PWA (Instalação) === -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0F172A">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Agenda DJ">
+    <!-- Atualizado com o novo logo transparente PNG -->
+    <link rel="apple-touch-icon" href="https://i.ibb.co/jZsg3kQ9/Gemini-Generated-Image-n8z6zvn8z6zvn8z6-removebg-preview.png">
+    <!-- ========================================================== -->
+    
     <script src="https://cdn.tailwindcss.com"></script>
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -238,8 +248,9 @@
             <div class="flex items-center justify-between h-16">
                 <div class="flex items-center">
                     <div class="flex-shrink-0 flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-full bg-corp-accent flex items-center justify-center text-white font-bold overflow-hidden border-2 border-corp-border">
-                            <img src="https://i.ibb.co/7dn8MYf0/Whats-App-Image-2026-05-19-at-11-54-53.jpg" alt="Marcio David" class="w-full h-full object-cover">
+                        <!-- Atualizado: bg-black, object-contain e p-0.5 -->
+                        <div class="w-10 h-10 rounded-full bg-black flex items-center justify-center text-white font-bold overflow-hidden border-2 border-corp-border">
+                            <img src="https://i.ibb.co/jZsg3kQ9/Gemini-Generated-Image-n8z6zvn8z6zvn8z6-removebg-preview.png" alt="Marcio David" class="w-full h-full object-contain p-0.5">
                         </div>
                         <div>
                             <span class="text-corp-primary font-bold text-md leading-tight block">Marcio David</span>
@@ -255,7 +266,15 @@
                     </div>
                 </div>
 
+                <!-- User Actions / Mobile Toggle -->
                 <div class="flex items-center gap-4">
+                    
+                    <!-- === ADICIONE ISTO AQUI: Botão de Instalação === -->
+                    <button id="btnInstall" class="hidden px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-md text-sm font-bold transition-colors items-center gap-2 shadow-sm">
+                        <i class="fas fa-download"></i> <span class="hidden sm:inline">Instalar App</span>
+                    </button>
+                    <!-- =============================================== -->
+
                     <button class="text-corp-secondary hover:text-corp-primary relative p-2">
                         <i class="far fa-bell text-lg"></i>
                         <span class="absolute top-1 right-1 flex h-2 w-2">
@@ -1553,5 +1572,42 @@
         window.setTheme = setTheme;
 
     </script>
+
+    <!-- === ADICIONE ISTO AQUI: Lógica do PWA (Service Worker e Botão) === -->
+    <script>
+        // 1. Registra o Service Worker (Motor do App)
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(reg => console.log('PWA: Service Worker registrado!', reg))
+                    .catch(err => console.log('PWA: Falha ao registrar', err));
+            });
+        }
+
+        // 2. Lógica para mostrar o botão "Instalar App"
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            const btnInstall = document.getElementById('btnInstall');
+            if (btnInstall) {
+                btnInstall.classList.remove('hidden');
+                btnInstall.classList.add('flex');
+                
+                btnInstall.addEventListener('click', () => {
+                    deferredPrompt.prompt();
+                    deferredPrompt.userChoice.then((choiceResult) => {
+                        if (choiceResult.outcome === 'accepted') {
+                            console.log('Usuário aceitou instalar o App');
+                        }
+                        deferredPrompt = null;
+                        btnInstall.classList.add('hidden');
+                        btnInstall.classList.remove('flex');
+                    });
+                });
+            }
+        });
+    </script>
+    <!-- ================================================================ -->
 </body>
 </html>

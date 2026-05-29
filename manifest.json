@@ -1,0 +1,23 @@
+{
+  "name": "DJ Marcio David - Management",
+  "short_name": "Agenda DJ",
+  "description": "Sistema de Gestão de Eventos e Disponibilidade",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#0F172A",
+  "theme_color": "#0F172A",
+  "icons": [
+    {
+      "src": "https://i.ibb.co/jZsg3kQ9/Gemini-Generated-Image-n8z6zvn8z6zvn8z6-removebg-preview.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://i.ibb.co/jZsg3kQ9/Gemini-Generated-Image-n8z6zvn8z6zvn8z6-removebg-preview.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
